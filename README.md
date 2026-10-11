@@ -1,23 +1,26 @@
 # shiki-env-spec
 
-Shiki language support for [@env-spec](https://varlock.dev/env-spec/overview/) and
-[Varlock](https://varlock.dev/) `.env.schema` files. Highlights decorators, resolver
-functions, variable expansion, literals, and multiline values using Varlock's
-TextMate grammar.
+[![CI](https://github.com/akshitkrnagpal/shiki-env-spec/actions/workflows/ci.yml/badge.svg)](https://github.com/akshitkrnagpal/shiki-env-spec/actions/workflows/ci.yml)
 
-## Install and use
+Syntax highlighting for [Varlock](https://varlock.dev/) `.env.schema` files in
+[Shiki](https://shiki.style/), powered by Varlock's
+[@env-spec](https://varlock.dev/env-spec/overview/) TextMate grammar.
 
-Before the first npm release, install directly from GitHub:
+Highlights schema decorators such as `@required`, `@sensitive`, and `@type`,
+resolver functions, variable interpolation, strings, numbers, and multiline values.
+
+## Installation
+
+Install Shiki and the language package from GitHub:
 
 ```sh
 npm install shiki github:akshitkrnagpal/shiki-env-spec
 ```
 
-After publication to npm:
+## Usage
 
-```sh
-npm install shiki shiki-env-spec
-```
+Register the grammar when creating your highlighter, then use `env-spec` as the
+language ID:
 
 ```js
 import { createHighlighter } from 'shiki';
@@ -28,64 +31,60 @@ const highlighter = await createHighlighter({
   langs: [envSpec],
 });
 
-const html = highlighter.codeToHtml('# @required @sensitive\nAPI_KEY=', {
-  lang: 'env-spec', // 'varlock' is an alias
+const schema = `# @required @sensitive
+API_KEY=
+
+# @type=number(min=1, max=65535)
+PORT=3000`;
+
+const html = highlighter.codeToHtml(schema, {
+  lang: 'env-spec',
   theme: 'github-dark',
 });
 
 highlighter.dispose();
 ```
 
-For an existing highlighter, call `await highlighter.loadLanguage(envSpec)`.
-CommonJS consumers can use `require('shiki-env-spec')`. The grammar also works
-with `createHighlighterCore` and either Shiki regex engine. Map `.env.schema`
-filenames to `env-spec` in your application; Shiki takes an explicit language ID.
+`varlock` is an alias for `env-spec`, so either language ID works.
 
-The raw TextMate grammar is exported as `shiki-env-spec/grammar` for editor tooling.
-The package has no runtime imports and supports Node 20+, browsers, and bundlers.
-Shiki 4 is covered by the test suite.
+For an existing highlighter, load the grammar before highlighting:
 
-## Develop
-
-```sh
-npm ci
-npm test
-npm run typecheck
-npm pack
+```js
+await highlighter.loadLanguage(envSpec);
 ```
 
-The build emits ESM, CommonJS, and their TypeScript declarations. CI tests both
-regex engines and light/dark themes on Node 20, 22, and 24, and uploads installable
-package archives as workflow artifacts.
+If your application chooses languages from filenames, map `.env.schema` to
+`env-spec`. Shiki's highlighting API takes an explicit language ID.
 
-## Publishing
+### CommonJS
 
-The `publish.yml` workflow publishes to npm when a GitHub release is published.
-The release tag must match `v` plus the version in `package.json`, e.g. `v0.1.0`.
+```js
+const envSpec = require('shiki-env-spec');
+```
 
-First-time npm setup requires the package owner's npm account:
+### Raw TextMate grammar
 
-1. Authenticate locally with `npm login`, then run `npm publish --access public`
-   from this checkout to create `shiki-env-spec` on npm. Use an account with
-   permission to publish this package name.
-2. In the npm package's **Settings → Trusted Publisher**, choose GitHub Actions:
-   organization/user `akshitkrnagpal`, repository `shiki-env-spec`, workflow filename
-   `publish.yml`, and no environment name. Allow direct `npm publish`.
-3. For later releases, update the version and lockfile, push the commit, and publish
-   the matching GitHub release. GitHub-hosted Actions authenticate with OIDC; no npm
-   token secret is needed. Run the first CI publication within npm's configured
-   trusted-publisher activation window.
+The original grammar JSON is available through `shiki-env-spec/grammar` for
+editor integrations and other TextMate consumers.
 
-See [npm's trusted-publishing instructions](https://docs.npmjs.com/trusted-publishers/).
-The workflow uses Node 24 and explicitly installs npm 11.13.0 for OIDC support.
+## Compatibility
 
-## Grammar source and license
+- Tested with Shiki 4, including its Oniguruma and JavaScript regex engines.
+- Works with `createHighlighter` and `createHighlighterCore`.
+- Includes ESM, CommonJS, and TypeScript declarations.
+- Supports Node.js 20+, browsers, and bundlers.
 
-The grammar is maintained by [dmno-dev/varlock](https://github.com/dmno-dev/varlock/blob/main/packages/vscode-plugin/syntaxes/env-spec.tmLanguage.json).
-`grammar-source.json` records the pinned upstream commit and SHA-256 checksum.
-To update it, copy the grammar from a reviewed upstream commit, update that
-metadata and checksum, then run the tests. Grammar fixes should be contributed
-to Varlock so other integrations receive them too.
+## Issues and contributions
 
-Package code is MIT licensed. The upstream grammar is MIT licensed by DMNO Inc.;
-its original notice is included in `VARLOCK-LICENSE`.
+Report package or integration problems in
+[this repository's issues](https://github.com/akshitkrnagpal/shiki-env-spec/issues).
+The grammar is maintained by
+[Varlock](https://github.com/dmno-dev/varlock/blob/main/packages/vscode-plugin/syntaxes/env-spec.tmLanguage.json);
+contribute syntax fixes there so other integrations benefit too.
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md) for development and release instructions.
+
+## License
+
+[MIT](./LICENSE). The upstream grammar is MIT licensed by DMNO Inc.; its original
+notice is included in [VARLOCK-LICENSE](./VARLOCK-LICENSE).
