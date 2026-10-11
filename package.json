@@ -1,0 +1,69 @@
+{
+  "name": "shiki-env-spec",
+  "version": "0.1.0",
+  "description": "Shiki TextMate language grammar for @env-spec and Varlock .env.schema files",
+  "type": "module",
+  "license": "MIT",
+  "author": "Akshit Kumar Nagpal",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akshitkrnagpal/shiki-env-spec.git"
+  },
+  "homepage": "https://github.com/akshitkrnagpal/shiki-env-spec#readme",
+  "bugs": {
+    "url": "https://github.com/akshitkrnagpal/shiki-env-spec/issues"
+  },
+  "keywords": [
+    "shiki",
+    "varlock",
+    "env-spec",
+    "dotenv",
+    "textmate",
+    "syntax-highlighting"
+  ],
+  "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./grammar": "./env-spec.tmLanguage.json"
+  },
+  "files": [
+    "dist",
+    "env-spec.tmLanguage.json",
+    "grammar-source.json",
+    "LICENSE",
+    "VARLOCK-LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "npm run build && node --test test/grammar.test.mjs",
+    "typecheck": "tsc --noEmit",
+    "prepack": "npm run build",
+    "prepare": "npm run build"
+  },
+  "dependencies": {
+    "@shikijs/types": "^4.2.0"
+  },
+  "devDependencies": {
+    "shiki": "4.5.0",
+    "typescript": "6.0.3",
+    "@types/node": "^24.0.0"
+  }
+}

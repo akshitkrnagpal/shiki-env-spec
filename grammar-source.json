@@ -1,0 +1,7 @@
+{
+  "repository": "dmno-dev/varlock",
+  "path": "packages/vscode-plugin/syntaxes/env-spec.tmLanguage.json",
+  "commit": "d7e93f4b650f840cb762e76deda8049e87ef58fa",
+  "url": "https://raw.githubusercontent.com/dmno-dev/varlock/d7e93f4b650f840cb762e76deda8049e87ef58fa/packages/vscode-plugin/syntaxes/env-spec.tmLanguage.json",
+  "sha256": "fc719047c10496af204724195f9bd6a4a54db13227d55cd2198e7f9f6fdec880"
+}
